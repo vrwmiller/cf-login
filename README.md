@@ -14,12 +14,18 @@ A comprehensive authentication service built as a Cloudflare Worker that support
 
 ## Architecture
 
-```
-Client App → Cloudflare Worker → Supabase Database
-                ↓
-         OAuth Providers (Google, GitHub)
-                ↓
-           Cloudflare KV (Sessions)
+```mermaid
+flowchart TD
+  ClientApp["Client App"]
+  Worker["Cloudflare Worker"]
+  Supabase["Supabase Database"]
+  OAuth["OAuth Providers (Google, GitHub)"]
+  KV["Cloudflare KV (Sessions)"]
+
+  ClientApp --> Worker
+  Worker --> Supabase
+  Worker --> OAuth
+  Worker --> KV
 ```
 
 ## API Endpoints
