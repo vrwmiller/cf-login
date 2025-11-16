@@ -1,0 +1,79 @@
+name = "cf-login-worker"
+main = "index.js"
+compatibility_date = "2024-11-16"
+compatibility_flags = ["nodejs_compat"]
+
+# KV Namespaces
+kv_namespaces = [
+  { binding = "SESSION_KV", id = "your-session-kv-namespace-id", preview_id = "your-session-preview-kv-namespace-id" }
+]
+
+# Environment variables (secrets should be set via wrangler secret)
+[vars]
+# These are non-sensitive configuration values
+ENVIRONMENT = "production"
+ALLOWED_ORIGINS = "https://yourdomain.com,https://app.yourdomain.com"
+
+# Database and API URLs (non-sensitive)
+SUPABASE_URL = "https://your-project.supabase.co"
+
+# OAuth redirect URIs
+GOOGLE_REDIRECT_URI = "https://cf-login-worker.your-subdomain.workers.dev/auth/callback/google"
+GITHUB_REDIRECT_URI = "https://cf-login-worker.your-subdomain.workers.dev/auth/callback/github"
+
+# Secrets (set these using: wrangler secret put SECRET_NAME)
+# SUPABASE_ANON_KEY = "your-supabase-anon-key"
+# SUPABASE_SERVICE_ROLE_KEY = "your-supabase-service-role-key"
+# JWT_SECRET = "your-jwt-secret-key"
+# GOOGLE_CLIENT_ID = "your-google-oauth-client-id"
+# GOOGLE_CLIENT_SECRET = "your-google-oauth-client-secret"
+# GITHUB_CLIENT_ID = "your-github-oauth-app-id"
+# GITHUB_CLIENT_SECRET = "your-github-oauth-app-secret"
+
+# Development environment configuration
+[env.development]
+name = "cf-login-worker-dev"
+kv_namespaces = [
+  { binding = "SESSION_KV", id = "your-dev-session-kv-namespace-id", preview_id = "your-dev-session-preview-kv-namespace-id" }
+]
+
+[env.development.vars]
+ENVIRONMENT = "development"
+ALLOWED_ORIGINS = "*"
+SUPABASE_URL = "https://your-dev-project.supabase.co"
+
+# Staging environment configuration
+[env.staging]
+name = "cf-login-worker-staging"
+kv_namespaces = [
+  { binding = "SESSION_KV", id = "your-staging-session-kv-namespace-id", preview_id = "your-staging-session-preview-kv-namespace-id" }
+]
+
+[env.staging.vars]
+ENVIRONMENT = "staging"
+ALLOWED_ORIGINS = "https://staging.yourdomain.com"
+SUPABASE_URL = "https://your-staging-project.supabase.co"
+
+# Build configuration (if using build tools)
+# [build]
+# command = "npm run build"
+# cwd = "."
+# watch_dir = "src"
+
+# Triggers for automatic deployment
+[[triggers]]
+crons = ["0 2 * * *"]  # Daily at 2 AM for cleanup tasks
+
+# Durable Objects (if needed for future features)
+# [[durable_objects.bindings]]
+# name = "USER_SESSION_DO"
+# class_name = "UserSessionDurableObject"
+
+# Compatibility settings for specific features
+# [build.upload]
+# format = "service-worker"
+
+# Rate limiting (if using Cloudflare's rate limiting)
+# [[services]]
+# binding = "rate_limiter"
+# service = "rate-limiter-worker"
